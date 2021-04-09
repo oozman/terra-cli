@@ -50,7 +50,7 @@ class Terra {
      * @param options
      * @returns {Promise<{msg: string, data: {apy: number}}>}
      */
-    async getAnchorAPY(options) {
+    async anchorAPY(options) {
 
         const lcdUrl = _.get(options, "lcdUrl", "https://tequila-lcd.terra.dev");
         const chainId = _.get(options, "chainId", "tequila-0004");

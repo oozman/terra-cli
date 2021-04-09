@@ -22,17 +22,17 @@ program
     });
 
 /**
- * Command: get-anchor-apy [options]
+ * Command: anchor-apy [options]
  */
 program
-    .command("get-anchor-apy")
+    .command("anchor-apy")
     .description("Get current Anchor APY.")
     .option("-l, --lcd-url <value>", "Set LCD URL.", "https://tequila-lcd.terra.dev")
     .option("-c, --chain-id <value>", "Set Chain ID.", "tequila-0004")
     .option("-a, --address-provider-id <value>", "Set Address Provider ID.", "tequila0004")
     .option("-d, --denom <value>", "Set Market Denomination. [uusd, ukrw]", "uusd")
     .action(async (options) => {
-        console.log(stringify(await Terra.getAnchorAPY(options)));
+        console.log(stringify(await Terra.anchorAPY(options)));
     });
 
 /**
