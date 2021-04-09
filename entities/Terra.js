@@ -23,13 +23,24 @@ class Terra {
         const mk = new terra.MnemonicKey();
         const wallet = lcd.wallet(mk);
 
+        // Get balance.
         const resultBalance = await wallet.lcd.bank.balance(address);
         const balance = JSON.parse(resultBalance.toJSON());
 
-        return _.map(balance, value => {
-            value.amount = _.parseInt(_.get(value, "amount"));
-            return value;
+        const result = {};
+
+        // Reformat data.
+        _.each(balance, value => {
+            const denom = _.get(value, "denom");
+            const amount = _.parseInt(_.get(value, "amount"));
+
+            _.set(result, denom, amount);
         });
+
+        return {
+            msg: "Your wallet info.",
+            data: result
+        }
     }
 
     /**
