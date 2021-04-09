@@ -36,6 +36,23 @@ program
     });
 
 /**
+ * Command: anchor-total-deposit [options] <address>
+ */
+program
+    .command("anchor-total-deposit")
+    .arguments("<address>")
+    .description("Get total Anchor deposit.", {
+        address: "Your Terra address or account number."
+    })
+    .option("-l, --lcd-url <value>", "Set LCD URL.", "https://tequila-lcd.terra.dev")
+    .option("-c, --chain-id <value>", "Set Chain ID.", "tequila-0004")
+    .option("-a, --address-provider-id <value>", "Set Address Provider ID.", "tequila0004")
+    .option("-d, --denom <value>", "Set Market Denomination. [uusd, ukrw]", "uusd")
+    .action(async (options) => {
+        console.log(stringify(await Terra.anchorTotalDeposit(options)));
+    });
+
+/**
  * Command: transaction [options] <hash>
  */
 program
