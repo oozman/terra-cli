@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "mac": "nexe -n tcli-mac -t mac-x64-14.9.0 index.js",
-    "linux": "nexe -n tcli-linux -t linux-x64-14.15.2 index.js",
+    "linux": "nexe -n tcli -t linux-x64-14.15.2 index.js",
     "win": "nexe -n tcli-win -t windows-x64-14.5.0 index.js"
   },
   "repository": {

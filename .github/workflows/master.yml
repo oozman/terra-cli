@@ -1,0 +1,49 @@
+name: Build binaries
+
+on:
+  push:
+    branches:
+      - main
+      - master
+
+jobs:
+  Build-Binaries:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [ 14.x ]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Get version
+        id: version
+        uses: notiz-dev/github-action-json-property@release
+        with:
+          path: 'package.json'
+          prop_path: 'version'
+
+      - name: Lets build the binaries. Using node-${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: |
+          npm install
+          npm run linux
+          npm run mac
+          npm run win
+          VERSION=${{steps.version.outputs.prop}}
+          FOLDER="bin/$VERSION"
+          mkdir -p $FOLDER
+          mv tcli $FOLDER
+          mv tcli-mac  $FOLDER
+          mv tcli-win.exe $FOLDER
+
+      - name: Deploy to terra-cli.surge.sh
+        uses: dswistowski/surge-sh-action@v1
+        with:
+          domain: ${{ secrets.SURGE_DOMAIN }}
+          project: './bin'
+          login: ${{ secrets.SURGE_LOGIN }}
+          token: ${{ secrets.SURGE_TOKEN }}
