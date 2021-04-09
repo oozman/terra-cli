@@ -14,7 +14,7 @@ Yet another Terra Money cli, but a little simpler.
 
 ### via Binary
 
-1. Download your binary of choice. See: [#Binaries](https://github.com/oozman/terra-cli/tree/master#binaries) section below.
+1. Download your binary of choice. See: [#Binaries](https://github.com/oozman/terra-cli#binaries) section below.
 2. Run command `./tcli {command}`
 
 ## Commands
