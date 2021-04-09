@@ -13,7 +13,7 @@ program
     .command("wallet")
     .arguments("<address>")
     .description("Get wallet info.", {
-        address: "Your Terra address or account number."
+        address: "Your account address."
     })
     .option("-l, --lcd-url <value>", "Set LCD URL.", "https://tequila-lcd.terra.dev")
     .option("-c, --chain-id <value>", "Set Chain ID.", "tequila-0004")
@@ -42,7 +42,7 @@ program
     .command("anchor-total-deposit")
     .arguments("<address>")
     .description("Get total Anchor deposit.", {
-        address: "Your Terra address or account number."
+        address: "Your account address."
     })
     .option("-l, --lcd-url <value>", "Set LCD URL.", "https://tequila-lcd.terra.dev")
     .option("-c, --chain-id <value>", "Set Chain ID.", "tequila-0004")
@@ -75,7 +75,7 @@ program
     .description("Send money.", {
         amountInMicrons: "Amount in microns. Eg: If you want to send 20 uusd, your amount should be: 20000000.",
         denom: "Amount\'s market denomination. [uusd, ukrw]",
-        toAddress: "Address where you want to send your money."
+        toAddress: "Account address where you want to send your money."
     })
     .option("-l, --lcd-url <value>", "Set LCD URL.", "https://tequila-lcd.terra.dev")
     .option("-c, --chain-id <value>", "Set Chain ID.", "tequila-0004")
