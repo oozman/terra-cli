@@ -58,9 +58,7 @@ class Terra {
         const denom = _.get(options, "denom", "uusd");
 
         const addressProvider = new anchorLib.AddressProviderFromJson(anchorLib[addressProviderId]);
-
         const lcd = new terra.LCDClient({URL: lcdUrl, chainID: chainId});
-
         const anchor = new anchorLib.Earn(lcd, addressProvider);
 
         return {
@@ -69,6 +67,40 @@ class Terra {
                 apy: await anchor.getAPY({
                     market: denom
                 })
+            }
+        }
+    }
+
+    /**
+     * Get total Anchor deposit.
+     *
+     * @param address
+     * @param options
+     * @returns {Promise<{msg: string, data: {total: number}}>}
+     */
+    async anchorTotalDeposit(address, options) {
+
+        const lcdUrl = _.get(options, "lcdUrl", "https://tequila-lcd.terra.dev");
+        const chainId = _.get(options, "chainId", "tequila-0004");
+        const addressProviderId = _.get(options, "addressProviderId", "tequila0004");
+        const denom = _.get(options, "denom", "uusd");
+
+        const addressProvider = new anchorLib.AddressProviderFromJson(anchorLib[addressProviderId]);
+        const lcd = new terra.LCDClient({URL: lcdUrl, chainID: chainId});
+        const anchor = new anchorLib.Earn(lcd, addressProvider);
+
+        let total = await anchor.getTotalDeposit({
+            market: denom,
+            address: address
+        });
+
+        // Convert to microns.
+        total = total * 100000;
+
+        return {
+            msg: "Total Anchor deposit.",
+            data: {
+                total: total
             }
         }
     }
