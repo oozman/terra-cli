@@ -1,6 +1,7 @@
 const _ = require("lodash");
 const terra = require("@terra-money/terra.js");
 const anchorLib = require("@anchor-protocol/anchor.js");
+const axios = require("axios");
 
 class Terra {
 
@@ -69,6 +70,49 @@ class Terra {
                     market: denom
                 })
             }
+        }
+    }
+
+    /**
+     * Get transaction.
+     *
+     * @param hash
+     * @param options
+     * @returns {Promise<{msg: string, data: {fee: any, gas_used: any, gas_wanted: any, txhash, height: any}}>}
+     */
+    async transaction(hash, options) {
+
+        const apiUrl = _.get(options, "apiUrl", "https://tequila-fcd.terra.dev");
+
+        const result = await axios.get(apiUrl + "/txs/" + hash);
+
+        // Reformat fees.
+        const fees = _.get(result, "data.tx.value.fee.amount", []);
+        const mappedFees = {
+            amount: {},
+            gas: 0
+        };
+        _.map(fees, fee => {
+            const denom = _.get(fee, "denom");
+            const amount = _.parseInt(_.get(fee, "amount"));
+
+            _.set(mappedFees["amount"], denom, amount);
+        });
+
+        // Get gas.
+        mappedFees["gas"] = _.parseInt(_.get(result, "data.tx.value.fee.gas", 0));
+
+        const data = {
+            txhash: hash,
+            fees: mappedFees,
+            gas_used: _.parseInt(_.get(result, "data.gas_used", 0)),
+            gas_wanted: _.parseInt(_.get(result, "data.gas_wanted", 0)),
+            height: _.parseInt(_.get(result, "data.height", 0))
+        }
+
+        return {
+            msg: "Transaction info.",
+            data: data
         }
     }
 }
