@@ -86,4 +86,23 @@ program
         console.log(stringify(await Terra.send(amountInMicrons, denom, toAddress, options)));
     });
 
+/**
+ * Command: anchor-deposit [options] <amountInMicrons> <denom>
+ */
+program
+    .command("anchor-deposit")
+    .arguments("<amountInMicrons> <denom>")
+    .description("Deposit to Anchor.", {
+        amountInMicrons: "Amount in microns. Eg: If you want to send 20 uusd, your amount should be: 20000000.",
+        denom: "Amount\'s market denomination. [uusd, ukrw]"
+    })
+    .option("-l, --lcd-url <value>", "Set LCD URL.", "https://tequila-lcd.terra.dev")
+    .option("-c, --chain-id <value>", "Set Chain ID.", "tequila-0004")
+    .option("-m, --mnemonic <value>", "Set your mnemonic key.")
+    .option("-g, --gas-adjustment <value>", "Set gas adjustment.", "1.4")
+    .option("-p, --gas-price <value>", "Set gas price.", "0.15uusd")
+    .action(async (amountInMicrons, denom, options) => {
+        console.log(stringify(await Terra.anchorDeposit(amountInMicrons, denom, options)));
+    });
+
 program.parse(process.argv);
