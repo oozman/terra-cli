@@ -147,6 +147,86 @@ class Terra {
             data: data
         }
     }
+
+    /**
+     * Send money.
+     *
+     * @param amountInMicrons
+     * @param denom
+     * @param toAddress
+     * @param options
+     * @returns {Promise<{msg: string, data: (Block & TxSuccess) | (Block & TxError)}>}
+     */
+    async send(amountInMicrons, denom, toAddress, options) {
+
+        const lcdUrl = _.get(options, "lcdUrl", "https://tequila-lcd.terra.dev");
+        const chainId = _.get(options, "chainId", "tequila-0004");
+        const mnemonic = _.get(options, "mnemonic");
+        const gasAdjustment = _.get(options, "gasAdjustment", 1.4);
+        const gasPrice = _.get(options, "gasPrice", "0.15uusd");
+
+        if (_.isEmpty(mnemonic)) {
+            throw new Error("Please provide your mnemonic key.");
+        }
+
+        const lcd = new terra.LCDClient({
+            URL: lcdUrl,
+            chainID: chainId,
+        });
+
+        const mk = new terra.MnemonicKey({
+            mnemonic: mnemonic
+        });
+        const wallet = lcd.wallet(mk);
+
+        // Prepare amount param.
+        const amountParam = {};
+        _.set(amountParam, denom, amountInMicrons);
+
+        const send = new terra.MsgSend(
+            wallet.key.accAddress,
+            toAddress,
+            amountParam
+        );
+
+        let result = {};
+
+        try {
+            // Let's sign it.
+            const msg = await wallet.createAndSignTx({
+                msgs: [send],
+                gasAdjustment: gasAdjustment,
+                gasPrices: gasPrice
+            });
+
+            // Let's execute.
+            result = await lcd.tx.broadcast(msg);
+        } catch (e) {
+            const data = _.get(e, "response.data");
+
+            if (_.isEmpty(data)) {
+                throw new Error("Something is wrong. Unable to send / broadcast transaction.")
+            }
+
+            const errorMsg = _.get(data, "error");
+
+            if (_.isEmpty(errorMsg)) {
+                throw new Error("Something is wrong. Not sure what\'s the error.");
+            }
+
+            throw new Error(errorMsg);
+        }
+
+        // Successful broadcast, but something is wrong happened along the way.
+        if (_.has(result, "code")) {
+            throw new Error(_.get(result, "raw_log"));
+        }
+
+        return {
+            msg: "Money sent.",
+            data: result
+        };
+    }
 }
 
 module.exports = Terra;
