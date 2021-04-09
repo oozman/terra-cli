@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/oozman/terra-cli#readme",
   "dependencies": {
+    "@anchor-protocol/anchor.js": "^1.0.0",
     "@terra-money/terra.js": "^1.6.0",
     "commander": "^7.2.0",
     "fast-json-stable-stringify": "^2.1.0",
