@@ -105,6 +105,27 @@ Get your total money deposited in Anchor.
   ./tcli anchor-total-deposit terra12vyjr9ges6gv56aj020fsux09cqzr5s0p5sfq4
 ```
 
+### Anchor Borrow Summary
+Get anchor borrow summary.
+
+```
+./tcli anchor-borrow-summary [options] <address>
+```
+
+**Options:**
+```
+  -l, --lcd-url <value>              Set LCD URL. (default: "https://tequila-lcd.terra.dev")
+  -c, --chain-id <value>             Set Chain ID. (default: "tequila-0004")
+  -a, --address-provider-id <value>  Set Address Provider ID. (default: "tequila0004")
+  -d, --denom <value>                Set Market Denomination. [uusd, ukrw] (default: "uusd")
+```
+
+**Example:**
+
+```
+  ./tcli anchor-borrow-summary terra12vyjr9ges6gv56aj020fsux09cqzr5s0p5sfq4
+```
+
 ### Transaction
 Get transaction details of a given hash id.
 
