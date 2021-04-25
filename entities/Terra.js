@@ -2,6 +2,7 @@ const _ = require("lodash");
 const terra = require("@terra-money/terra.js");
 const anchorLib = require("@anchor-protocol/anchor.js");
 const axios = require("axios");
+const currency = require("currency.js");
 
 class Terra {
 
@@ -290,6 +291,70 @@ class Terra {
             msg: "Money has been deposited to Anchor.",
             data: result
         };
+    }
+
+    async anchorBorrowSummary(address, options) {
+        const lcdUrl = _.get(options, "lcdUrl", "https://tequila-lcd.terra.dev");
+        const chainId = _.get(options, "chainId", "tequila-0004");
+        const addressProviderId = _.get(options, "addressProviderId", "tequila0004");
+        const denom = _.get(options, "denom", "uusd");
+
+        const addressProvider = new anchorLib.AddressProviderFromJson(anchorLib[addressProviderId]);
+        const lcd = new terra.LCDClient({URL: lcdUrl, chainID: chainId});
+        const anchor = new anchorLib.Anchor(lcd, addressProvider);
+
+        const borrowLimit = anchor.borrow.getBorrowLimit({
+            market: denom,
+            address: address
+        });
+
+        const borrowedValue = anchor.borrow.getBorrowedValue({
+            market: denom,
+            address: address
+        });
+
+        const collaterals = anchor.borrow.getCollaterals({
+            market: denom,
+            address: address
+        });
+
+        const collateralValue = anchor.borrow.getCollateralValue({
+            market: denom,
+            address: address
+        });
+
+        const data = await Promise.all([borrowLimit, borrowedValue, collaterals, collateralValue]);
+
+        const result = {};
+
+        _.each(data, (value, index) => {
+            if (index === 0) {
+                return _.set(result, "borrow_limit", currency(value, {precision: 6}).intValue);
+            }
+
+            if (index === 1) {
+                return _.set(result, "borrowed_value", currency(value, {precision: 6}).intValue);
+            }
+
+            if (index === 2) {
+                const mappedCollaterals = _.map(value, item => {
+
+                    // Precision is 0, because it's already using 6 precisions.
+                    _.set(item, "balance", currency(item.balance, {precision: 0}).intValue);
+                    return item;
+                });
+
+                return _.set(result, "collaterals", mappedCollaterals);
+            }
+
+            if (index === 3) {
+                return _.set(result, "collateralValue", currency(value, {precision: 6}).intValue);
+            }
+        });
+        return {
+            msg: "Your borrow summary.",
+            data: result
+        }
     }
 }
 
