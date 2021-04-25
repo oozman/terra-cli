@@ -171,9 +171,9 @@ _Sends 50 UST to a specific Terra account adddress_
 ## Binaries
 You can also download the bundled binaries here:
 
-- Linux: https://terra-cli.surge.sh/1.0.0/tcli
-- macOS: https://terra-cli.surge.sh/1.0.0/tcli-mac
-- Windows: https://terra-cli.surge.sh/1.0.0/tcli-win.exe
+- Linux: https://terra-cli.surge.sh/1.1.0/tcli
+- macOS: https://terra-cli.surge.sh/1.1.0/tcli-mac
+- Windows: https://terra-cli.surge.sh/1.1.0/tcli-win.exe
 
 ## License
 
