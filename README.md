@@ -105,7 +105,6 @@ Get your total money deposited in Anchor.
   ./tcli anchor-total-deposit terra12vyjr9ges6gv56aj020fsux09cqzr5s0p5sfq4
 ```
 
-
 ### Anchor Borrow Summary
 Get anchor borrow summary.
 
